@@ -1,6 +1,6 @@
 // This IAM User is created for Airflow to use when putting logs into the Logs S3 Bucket
 resource "aws_iam_access_key" "airflow_logs" {
-  user    = aws_iam_user.airflow_logs.name
+  user = aws_iam_user.airflow_logs.name
 }
 
 resource "aws_iam_user" "airflow_logs" {

@@ -1,4 +1,4 @@
-marshmallow<3.0.0
+marshmallow
 virtualenv
 psycopg2
 requests
@@ -6,3 +6,4 @@ datetime
 airflow-exporter
 werkzeug<1.0.0
 docutils<0.16
+SQLAlchemy==1.3.15

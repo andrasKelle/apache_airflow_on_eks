@@ -1,6 +1,6 @@
 resource "aws_security_group" "allowed_ips" {
-  name = "${var.project_name}-airflow-allowed-ips-${var.environment}"
-  vpc_id        = module.vpc.vpc_id
+  name   = "${var.project_name}-airflow-allowed-ips-${var.environment}"
+  vpc_id = module.vpc.vpc_id
 
   ingress {
     from_port   = 32000
@@ -32,18 +32,18 @@ data "aws_iam_policy_document" "node_autoscaling_pol_doc" {
     effect = "Allow"
 
     resources = [
-      "*"]
+    "*"]
   }
 }
 
 resource "aws_security_group" "worker_management" {
-  name          = "${var.project_name}-airflow-worker-management-${var.environment}"
-  vpc_id        = module.vpc.vpc_id
+  name   = "${var.project_name}-airflow-worker-management-${var.environment}"
+  vpc_id = module.vpc.vpc_id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
     cidr_blocks = [
       "10.0.0.0/8",
       "172.16.0.0/12",
@@ -57,8 +57,8 @@ resource "aws_iam_role" "fargate" {
 
   assume_role_policy = jsonencode({
     Statement = [{
-      Action    = "sts:AssumeRole"
-      Effect    = "Allow"
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
       Principal = {
         Service = "eks-fargate-pods.amazonaws.com"
       }
@@ -68,12 +68,12 @@ resource "aws_iam_role" "fargate" {
 }
 
 resource "aws_iam_role_policy_attachment" "node_autoscaling" {
-  role = module.eks_cluster.worker_iam_role_name
+  role       = module.eks_cluster.worker_iam_role_name
   policy_arn = aws_iam_policy.node_autoscaling_pol.arn
 }
 
 resource "aws_iam_policy" "node_autoscaling_pol" {
-  name = "${var.project_name}-node-autoscaling-${var.environment}"
+  name   = "${var.project_name}-node-autoscaling-${var.environment}"
   policy = data.aws_iam_policy_document.node_autoscaling_pol_doc.json
 }
 
@@ -83,13 +83,13 @@ resource "aws_iam_role_policy_attachment" "fargate_pod_execution" {
 }
 
 module "eks_cluster" {
-  source          = "terraform-aws-modules/eks/aws"
-  version         = "12.0.0"
-  cluster_name    = "${var.project_name}-airflow-${var.environment}"
-  cluster_version = "1.16"
-  vpc_id          = module.vpc.vpc_id
+  source                    = "terraform-aws-modules/eks/aws"
+  version                   = "15.2.0"
+  cluster_name              = "${var.project_name}-airflow-${var.environment}"
+  cluster_version           = "1.17"
+  vpc_id                    = module.vpc.vpc_id
   cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
-  enable_irsa     = true
+  enable_irsa               = true
 
   subnets = [
     module.vpc.public_subnets[0],
@@ -114,11 +114,11 @@ module "eks_cluster" {
           "value"               = "true"
         },
         {
-          "key"                 = "${var.project_name}-airflow-${var.environment}"
-          "propagate_at_launch" = "false"
-          "value"               = "true"
+          "key"                                                                      = "${var.project_name}-airflow-${var.environment}"
+          "propagate_at_launch"                                                      = "false"
+          "value"                                                                    = "true"
           "k8s.io/cluster-autoscaler/${var.project_name}-airflow-${var.environment}" = "owned"
-          "k8s.io/cluster-autoscaler/enabled" = "true"
+          "k8s.io/cluster-autoscaler/enabled"                                        = "true"
         }
       ]
     },
@@ -133,11 +133,11 @@ module "eks_cluster" {
           "value"               = "true"
         },
         {
-          "key"                 = "${var.project_name}-airflow-${var.environment}"
-          "propagate_at_launch" = "false"
-          "value"               = "true"
+          "key"                                                                      = "${var.project_name}-airflow-${var.environment}"
+          "propagate_at_launch"                                                      = "false"
+          "value"                                                                    = "true"
           "k8s.io/cluster-autoscaler/${var.project_name}-airflow-${var.environment}" = "owned"
-          "k8s.io/cluster-autoscaler/enabled" = "true"
+          "k8s.io/cluster-autoscaler/enabled"                                        = "true"
         }
       ]
     }
@@ -173,11 +173,6 @@ provider "kubernetes" {
   token                  = data.aws_eks_cluster_auth.cluster.token
   load_config_file       = false
 }
-
-provider "random" {}
-provider "local" {}
-provider "null" {}
-provider "template" {}
 
 data "aws_availability_zones" "available" {}
 

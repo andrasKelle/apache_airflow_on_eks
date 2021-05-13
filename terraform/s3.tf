@@ -1,6 +1,6 @@
 // This is the bucket where Airflow will place the logs from the containers that are created for every task in an Airflow DAG
 resource "aws_s3_bucket_public_access_block" "deny_public_access_airflow_logs" {
-  bucket                  = aws_s3_bucket.logs.id
+  bucket = aws_s3_bucket.logs.id
 
   block_public_acls       = true
   block_public_policy     = true

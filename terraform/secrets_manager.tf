@@ -1,7 +1,7 @@
 // Secret for the Logs IAM User that contains the Access Keys
 resource "aws_secretsmanager_secret" "airflow_logging_user" {
-  name                = "${var.project_name}-airflow-logging-user-${var.environment}"
-  description         = "This is the IAM Programmatic User's access keys, that is used by Airflow to put it's container logs into a an S3 bucket"
+  name        = "${var.project_name}-airflow-logging-user-${var.environment}"
+  description = "This is the IAM Programmatic User's access keys, that is used by Airflow to put it's container logs into a an S3 bucket"
 
   tags = {
     Terraform   = "true"
